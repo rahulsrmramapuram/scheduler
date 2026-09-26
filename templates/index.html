@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Scheduler Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-shell">
+    <header class="hero">
+        <div>
+            <div class="eyebrow">OPERATING SYSTEMS PROJECT</div>
+            <h1>Process Scheduler <span>Simulation</span></h1>
+            <p>Visualize CPU scheduling, Gantt charts, waiting time, turnaround time and context switching.</p>
+        </div>
+        <div class="status"><span></span> SYSTEM READY</div>
+    </header>
+
+    <main>
+        <section class="panel controls">
+            <div class="panel-title">
+                <div>
+                    <h2>Scheduler Configuration</h2>
+                    <p>Choose an algorithm and define your process queue.</p>
+                </div>
+                <button class="secondary" id="loadDemo">Load Demo</button>
+            </div>
+
+            <div class="algorithm-grid">
+                <button class="algo active" data-algo="FCFS">
+                    <strong>FCFS</strong><small>First-Come-First-Served</small>
+                </button>
+                <button class="algo" data-algo="SJN">
+                    <strong>SJN</strong><small>Shortest Job Next</small>
+                </button>
+                <button class="algo" data-algo="RR">
+                    <strong>RR</strong><small>Round Robin</small>
+                </button>
+            </div>
+
+            <div class="quantum-row" id="quantumRow">
+                <label>Time Quantum
+                    <input id="quantum" type="number" min="1" value="2">
+                </label>
+                <span>Used only for Round Robin.</span>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr><th>Process</th><th>Arrival Time</th><th>Burst Time</th><th></th></tr>
+                    </thead>
+                    <tbody id="processBody"></tbody>
+                </table>
+            </div>
+
+            <div id="errorBanner" class="error-banner" style="display: none;"></div>
+
+            <div class="actions">
+                <button class="secondary" id="addProcess">+ Add Process</button>
+                <button class="primary" id="simulate">Run Simulation →</button>
+            </div>
+        </section>
+
+        <section class="dashboard">
+            <div class="metric"><span>Average Waiting</span><strong id="avgWaiting">—</strong><small>time units</small></div>
+            <div class="metric"><span>Average Turnaround</span><strong id="avgTurnaround">—</strong><small>time units</small></div>
+            <div class="metric"><span>CPU Utilization</span><strong id="cpuUtil">—</strong><small>percentage</small></div>
+            <div class="metric"><span>Context Switches</span><strong id="switches">—</strong><small>switches</small></div>
+        </section>
+
+        <section class="panel definitions-panel">
+            <div class="panel-title">
+                <div>
+                    <h2>Quick Definitions</h2>
+                    <p>Short explanations of the scheduling metrics.</p>
+                </div>
+            </div>
+
+            <div class="definitions-grid">
+                <div class="definition">
+                    <strong>Average Waiting</strong>
+                    <p>Average time processes wait before getting CPU execution.</p>
+                </div>
+                <div class="definition">
+                    <strong>Average Turnaround</strong>
+                    <p>Average total time from process arrival until completion.</p>
+                </div>
+                <div class="definition">
+                    <strong>CPU Utilization</strong>
+                    <p>Percentage of total time the CPU is busy executing processes.</p>
+                </div>
+                <div class="definition">
+                    <strong>Context Switch</strong>
+                    <p>When the CPU changes execution from one process to another.</p>
+                </div>
+                <div class="definition">
+                    <strong>Completion Time</strong>
+                    <p>Time at which a process finishes its CPU execution.</p>
+                </div>
+                <div class="definition">
+                    <strong>Turnaround Time</strong>
+                    <p>Completion time minus arrival time.</p>
+                </div>
+                <div class="definition">
+                    <strong>Waiting Time</strong>
+                    <p>Time a process spends waiting in the ready queue.</p>
+                </div>
+                <div class="definition">
+                    <strong>Response Time</strong>
+                    <p>Time from arrival until the process first gets the CPU.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-title">
+                <div>
+                    <h2>Gantt Chart</h2>
+                    <p id="chartSubtitle">Run a simulation to generate the CPU timeline.</p>
+                </div>
+            </div>
+            <div id="gantt" class="gantt empty">No simulation yet.</div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-title">
+                <div>
+                    <h2>Process Results</h2>
+                    <p>Detailed scheduling calculations for every process.</p>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table class="results-table">
+                    <thead>
+                    <tr>
+                        <th>Process</th><th>Arrival</th><th>Burst</th><th>Completion</th>
+                        <th>Turnaround</th><th>Waiting</th><th>Response</th>
+                    </tr>
+                    </thead>
+                    <tbody id="resultBody">
+                    <tr><td colspan="7" class="empty-cell">No results yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-title">
+                <div>
+                    <h2>Algorithm Comparison</h2>
+                    <p>Compare average metrics using the same process queue.</p>
+                </div>
+                <button class="secondary" id="compare">Compare Algorithms</button>
+            </div>
+            <canvas id="comparisonChart" height="110"></canvas>
+        </section>
+    </main>
+
+    <footer>
+        Process Scheduler Simulation · FCFS · SJN · Round Robin
+    </footer>
+</div>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
